@@ -82,6 +82,11 @@ namespace EstoqueApi.Service {
 
             IdentityResult? result = await _userManager.CreateAsync(user, signUpDTO.Password);
 
+            if(result.Errors.All(x => 
+            x.Code == "PasswordRequiresNonAlphanumeric" || 
+            x.Code == "PasswordRequiresDigit" || 
+            x.Code == "PasswordRequiresUpper")) throw new ArgumentException("Senha deve conter pelo menos um numero, umaletra e um caracter especial.");
+
             if (!result.Succeeded)
                 throw new ArgumentException("Cadastro do usuário falhou.");
 
