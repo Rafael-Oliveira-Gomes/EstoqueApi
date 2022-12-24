@@ -1,6 +1,5 @@
 ﻿using EstoqueApi.Model;
 using EstoqueApi.Model.Dto;
-using EstoqueApi.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -125,7 +124,7 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<ApplicationUser> GetCurrentUser() {
-            string? userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User); // Get user id:
+            string? userId = _userManager.GetUserId(_httpContextAccessor.HttpContext!.User); // Get user id:
 
             ApplicationUser user = await _userRepository.GetUser(userId);
 

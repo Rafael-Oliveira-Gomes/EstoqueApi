@@ -1,11 +1,10 @@
 ﻿using EstoqueApi.Model;
-using EstoqueApi.Repository;
-using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 using EstoqueApi.Interface.Repository;
 using EstoqueApi.Interface.Service;
+using System.Data.Entity.Core;
 
-namespace EstoqueApi.Service {
+namespace EstoqueApi.Service
+{
     public class ProdutoService : IProdutoService
     {
 
@@ -17,12 +16,12 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<bool> AdicionaProduto(ProdutoDto produtoDto) {
-            Produto produto = new Produto(produtoDto);
+            Produto produto = new(produtoDto);
 
             ApplicationUser currentUser = await _authService.GetCurrentUser();
             produto.UserUltimoUpdate = currentUser.UserName;
 
-            Produto result = await _produtoRepository.CreateProduto(produto);
+            await _produtoRepository.CreateProduto(produto);
             return true;
         }
 
@@ -34,14 +33,14 @@ namespace EstoqueApi.Service {
 
         public async Task<Produto> GetProduto(int produtoId) {
             Produto? produto = await _produtoRepository.GetProdutoById(produtoId);
-            if (produto == null) throw new Exception("Não encontrou");
+            if (produto == null) throw new ObjectNotFoundException("Não encontrou");
 
             return produto;
         }
 
         public async Task<Produto> GetProdutoPorNome(string nomeProduto) {
             Produto? produto = await _produtoRepository.GetProdutoPorNome(nomeProduto);
-            if (produto == null) throw new Exception("Não encontrou");
+            if (produto == null) throw new ObjectNotFoundException("Não encontrou");
 
             return produto;
         }
@@ -53,13 +52,12 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<int> UpdateProduto(ProdutoDto produtoDto) {
-            Produto produto = new Produto(produtoDto);
+            Produto produto = new(produtoDto);
 
             ApplicationUser currentUser = await _authService.GetCurrentUser();
             produto.UserUltimoUpdate = currentUser.UserName;
 
             return await _produtoRepository.UpdateProduto(produto);
-        }
-        
+        }        
     }
 }
