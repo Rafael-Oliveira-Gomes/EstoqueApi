@@ -1,9 +1,11 @@
-﻿using EstoqueApi.Context;
+﻿using EstoqueApi.Config.Context;
+using EstoqueApi.Interface.Repository;
 using EstoqueApi.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace EstoqueApi.Repository {
-    public class ProdutoRepository {
+    public class ProdutoRepository : IProdutoRepository
+    {
         private readonly MySqlContext _context;
 
         public ProdutoRepository(MySqlContext context) {
@@ -25,8 +27,8 @@ namespace EstoqueApi.Repository {
             return Produto;
         }
 
-        public async Task<Produto> CreateProduto(Produto Produto) {
-            var ret = await _context.Produto.AddAsync(Produto);
+        public async Task<Produto> CreateProduto(Produto produto) {
+            var ret = await _context.Produto.AddAsync(produto);
 
             await _context.SaveChangesAsync();
 
@@ -35,14 +37,14 @@ namespace EstoqueApi.Repository {
             return ret.Entity;
         }
 
-        public async Task<int> UpdateProduto(Produto Produto) {
-            _context.Entry(Produto).State = EntityState.Modified;
+        public async Task<int> UpdateProduto(Produto produto) {
+            _context.Entry(produto).State = EntityState.Modified;
 
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteProdutoAsync(int ProdutoId) {
-            var item = await _context.Produto.FindAsync(ProdutoId);
+        public async Task<bool> DeleteProdutoAsync(int produtoId) {
+            var item = await _context.Produto.FindAsync(produtoId);
             _context.Produto.Remove(item);
 
             await _context.SaveChangesAsync();

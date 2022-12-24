@@ -1,9 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
-namespace EstoqueApi.Identity {
-    public class TokenJWTBuilder {
+namespace EstoqueApi.Config.Identity 
+{
+    public class TokenJWTBuilder 
+    {
         private SecurityKey securityKey = null;
         private string subject = "";
         private string issuer = "";

@@ -6,17 +6,20 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using EstoqueApi.Interface.Repository;
+using EstoqueApi.Interface.Service;
 
 namespace EstoqueApi.Service {
-    public class AuthService {
-        private readonly UserRepository _userRepository;
+    public class AuthService : IAuthService
+    {
+        private readonly IUserRepository _userRepository;
 
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthService(UserRepository userRepository, IConfiguration configuration, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor) {
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor) {
             _userRepository = userRepository;
 
             _configuration = configuration;
@@ -62,7 +65,7 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<bool> SignUp(SignUpDTO signUpDTO) {
-            var userExists = await _userManager.FindByNameAsync(signUpDTO.Username);
+            ApplicationUser? userExists = await _userManager.FindByNameAsync(signUpDTO.Username);
             if (userExists != null)
                 throw new ArgumentException("Username already exists!");
 
@@ -78,7 +81,7 @@ namespace EstoqueApi.Service {
                 UserName = signUpDTO.Username
             };
 
-            var result = await _userManager.CreateAsync(user, signUpDTO.Password);
+            IdentityResult? result = await _userManager.CreateAsync(user, signUpDTO.Password);
 
             if (!result.Succeeded)
                 throw new ArgumentException("Cadastro do usuário falhou.");
@@ -94,9 +97,9 @@ namespace EstoqueApi.Service {
             if (!await _userManager.CheckPasswordAsync(user, signInDTO.Password))
                 throw new ArgumentException("Senha inválida.");
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            IList<string>? userRoles = await _userManager.GetRolesAsync(user);
 
-            var authClaims = new List<Claim>
+            List<Claim> authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -122,7 +125,7 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<ApplicationUser> GetCurrentUser() {
-            var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User); // Get user id:
+            string? userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User); // Get user id:
 
             ApplicationUser user = await _userRepository.GetUser(userId);
 

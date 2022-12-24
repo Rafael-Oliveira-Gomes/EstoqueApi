@@ -1,13 +1,15 @@
-﻿using EstoqueApi.Context;
-using EstoqueApi.Model;
+﻿using EstoqueApi.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EstoqueApi.Config.Context;
+using EstoqueApi.Interface.Repository;
 
 namespace EstoqueApi.Repository {
-    public class UserRepository {
+    public class UserRepository : IUserRepository
+    {
         private readonly MySqlContext _context;
 
         public UserRepository(MySqlContext context) {

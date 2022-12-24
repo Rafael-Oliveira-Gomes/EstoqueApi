@@ -2,24 +2,27 @@
 using EstoqueApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
+using EstoqueApi.Interface.Repository;
+using EstoqueApi.Interface.Service;
 
 namespace EstoqueApi.Service {
-    public class ProdutoService {
+    public class ProdutoService : IProdutoService
+    {
 
-        private readonly ProdutoRepository _produtoRepository;
-        private readonly AuthService _authService;
-        public ProdutoService(ProdutoRepository produtoRepository, AuthService authService) {
+        private readonly IProdutoRepository _produtoRepository;
+        private readonly IAuthService _authService;
+        public ProdutoService(IProdutoRepository produtoRepository, IAuthService authService) {
             _produtoRepository = produtoRepository;
             _authService = authService;
         }
 
         public async Task<bool> AdicionaProduto(ProdutoDto produtoDto) {
-            var produto = new Produto(produtoDto);
+            Produto produto = new Produto(produtoDto);
 
-            var currentUser = await _authService.GetCurrentUser();
+            ApplicationUser currentUser = await _authService.GetCurrentUser();
             produto.UserUltimoUpdate = currentUser.UserName;
 
-            var result = await _produtoRepository.CreateProduto(produto);
+            Produto result = await _produtoRepository.CreateProduto(produto);
             return true;
         }
 
@@ -30,14 +33,14 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<Produto> GetProduto(int produtoId) {
-            var produto = await _produtoRepository.GetProdutoById(produtoId);
+            Produto? produto = await _produtoRepository.GetProdutoById(produtoId);
             if (produto == null) throw new Exception("Não encontrou");
 
             return produto;
         }
 
         public async Task<Produto> GetProdutoPorNome(string nomeProduto) {
-            var produto = await _produtoRepository.GetProdutoPorNome(nomeProduto);
+            Produto? produto = await _produtoRepository.GetProdutoPorNome(nomeProduto);
             if (produto == null) throw new Exception("Não encontrou");
 
             return produto;
@@ -50,9 +53,9 @@ namespace EstoqueApi.Service {
         }
 
         public async Task<int> UpdateProduto(ProdutoDto produtoDto) {
-            var produto = new Produto(produtoDto);
+            Produto produto = new Produto(produtoDto);
 
-            var currentUser = await _authService.GetCurrentUser();
+            ApplicationUser currentUser = await _authService.GetCurrentUser();
             produto.UserUltimoUpdate = currentUser.UserName;
 
             return await _produtoRepository.UpdateProduto(produto);

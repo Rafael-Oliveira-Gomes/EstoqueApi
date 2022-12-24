@@ -1,4 +1,5 @@
-﻿using EstoqueApi.Model;
+﻿using EstoqueApi.Interface.Service;
+using EstoqueApi.Model;
 using EstoqueApi.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ namespace EstoqueApi.Controllers
     [Route("api/[controller]")]
     public class ProdutoController : ControllerBase {
         private readonly ILogger<ProdutoController> _logger;
-        private readonly ProdutoService _produtoService;
+        private readonly IProdutoService _produtoService;
 
-        public ProdutoController(ILogger<ProdutoController> logger, ProdutoService produtoService) {
+        public ProdutoController(ILogger<ProdutoController> logger, IProdutoService produtoService) {
             _logger = logger;
             _produtoService = produtoService;
         }

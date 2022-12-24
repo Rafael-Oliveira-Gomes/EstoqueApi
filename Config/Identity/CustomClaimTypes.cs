@@ -1,4 +1,4 @@
-﻿namespace EstoqueApi.Identity {
+﻿namespace EstoqueApi.Config.Identity {
     public static class CustomClaimTypes {
         public const string ClientId = "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/clientId";
         public const string AllowedOrigins = "http://schemas.xmlsoap.org/ws/2009/09/identity/claims/allowedorigins";

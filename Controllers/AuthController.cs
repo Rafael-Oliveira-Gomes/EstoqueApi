@@ -1,4 +1,5 @@
-﻿using EstoqueApi.Model;
+﻿using EstoqueApi.Interface.Service;
+using EstoqueApi.Model;
 using EstoqueApi.Model.Dto;
 using EstoqueApi.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -9,9 +10,9 @@ namespace EstoqueApi.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthService authService) {
+        public AuthController(IAuthService authService) {
             _authService = authService;
         }
 

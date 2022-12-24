@@ -1,10 +1,11 @@
 using Microsoft.OpenApi.Models;
 using System.Text;
+using EstoqueApi.Config.Context;
+using EstoqueApi.Config.Ioc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using EstoqueApi.Context;
 using EstoqueApi.Model;
 using EstoqueApi.Repository;
 using EstoqueApi.Service;
@@ -64,16 +65,13 @@ builder.Services.AddSwaggerGen(c => {
                         Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
 
-builder.Services.AddScoped<ProdutoRepository>();
-builder.Services.AddScoped<ProdutoService>();
-
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<AuthService>();
+builder.Services.ConfigRepositoryIoc();
+builder.Services.ConfigServiceIoc();
 
 WebApplication app = builder.Build();
 

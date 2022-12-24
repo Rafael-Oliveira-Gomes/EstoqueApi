@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 
-namespace EstoqueApi.Identity {
+namespace EstoqueApi.Config.Identity {
     public class TokenJWT {
         private JwtSecurityToken token;
 
