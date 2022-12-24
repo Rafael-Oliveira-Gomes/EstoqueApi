@@ -57,5 +57,6 @@ namespace EstoqueApi.Service {
 
             return await _produtoRepository.UpdateProduto(produto);
         }
+        
     }
 }
